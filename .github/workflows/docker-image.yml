@@ -14,7 +14,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v3
       with:
         fetch-depth: 0
  #https://github.com/marketplace/actions/git-semantic-version?version=v4.0.3       
@@ -24,7 +24,7 @@ jobs:
       with:
         major_pattern: "major:"
         minor_oattern: "feat:"
-        format: "${major}.${minor}.${path}-prerelease${increment}"
+        format: "${major}.${minor}.${patch}-prerelease${increment}"
         
     - name: Docker login
       env:
@@ -41,14 +41,14 @@ jobs:
     
     - name: Build Docker Image
       env:
-        NEW_VERSION: ${{ steps.version.outputs.version }}
+        NEW_VERSION:  ${{ steps.version.outputs.version }}
       run: |
-        docker build -t ergosanitas/docker-test-ms:NEW_VERSION .
+        docker build -t ergosanitas/docker-test-ms:$NEW_VERSION .
         docker build -t ergosanitas/docker-test-ms:latest .
     - name: Push Docker Image
       env:
         NEW_VERSION: ${{ steps.version.outputs.version }}
       run: |
-        docker push ergosanitas/docker-test-ms:NEW_VERSION
+        docker push ergosanitas/docker-test-ms:$NEW_VERSION
         docker push ergosanitas/docker-test-ms:latest
         
